@@ -1,0 +1,1 @@
+/home/coffeelipe/Projects/cria/login/flutter_application/build/app/intermediates/cxx/Debug/6q6o546j/obj/armeabi-v7a
