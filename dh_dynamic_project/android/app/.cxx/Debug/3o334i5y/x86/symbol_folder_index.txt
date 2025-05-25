@@ -1,0 +1,1 @@
+/home/coffeelipe/Projects/cria/login/flutter_application/build/app/intermediates/cxx/Debug/3o334i5y/obj/x86

@@ -1,0 +1,1 @@
+/home/coffeelipe/Projects/cria/auth_default/flutter_application/build/app/intermediates/cxx/Debug/6w1o5w16/obj/arm64-v8a

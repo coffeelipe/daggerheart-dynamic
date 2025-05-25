@@ -1,0 +1,28 @@
+{
+  "buildFiles": [
+    "/home/coffeelipe/development/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/coffeelipe/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/home/coffeelipe/Projects/personal/flutter/dh_dynamic/daggerheart-dynamic/dh_dynamic_project/android/app/.cxx/Debug/2s4i663l/x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/coffeelipe/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/home/coffeelipe/Projects/personal/flutter/dh_dynamic/daggerheart-dynamic/dh_dynamic_project/android/app/.cxx/Debug/2s4i663l/x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {},
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/home/coffeelipe/Android/Sdk/ndk/29.0.13113456/toolchains/llvm/prebuilt/linux-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/home/coffeelipe/Android/Sdk/ndk/29.0.13113456/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": []
+}
