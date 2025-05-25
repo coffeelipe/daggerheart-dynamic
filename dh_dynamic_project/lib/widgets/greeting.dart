@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/core/theme/app_pallete.dart';
-import 'package:flutter_application/providers/theme_provider.dart';
+import 'package:daggerheart_dynamic/core/theme/app_pallete.dart';
+import 'package:daggerheart_dynamic/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 /// Um widget que permite mostrar uma saudação personalizada usando RichText.

@@ -1,14 +1,18 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application/core/theme/app_pallete.dart';
-import 'package:flutter_application/providers/dice_color_provider.dart';
-import 'package:flutter_application/providers/tap_provider.dart';
-import 'package:flutter_application/providers/theme_provider.dart';
-import 'package:flutter_application/widgets/d_twelve.dart';
-import 'package:flutter_application/widgets/stats_bar.dart';
+import 'package:daggerheart_dynamic/core/theme/app_pallete.dart';
+import 'package:daggerheart_dynamic/providers/dice_color_provider.dart';
+import 'package:daggerheart_dynamic/providers/tap_provider.dart';
+import 'package:daggerheart_dynamic/providers/theme_provider.dart';
+import 'package:daggerheart_dynamic/widgets/d_twelve.dart';
+import 'package:daggerheart_dynamic/widgets/stats_bar.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   bool areLabelsHidden = false;
   bool hasRolled = false;
   bool isRolling = false;
+  File? _profileImage;
 
   int hopeDieVal = 12;
   int fearDieVal = 12;
@@ -35,6 +40,12 @@ class _HomePageState extends State<HomePage> {
   int resultValue = 0;
   String characterName = 'Kaeros de Skaldrith';
   List<String> rollHistory = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileImage();
+  }
 
   @override
   void dispose() {
@@ -53,12 +64,53 @@ class _HomePageState extends State<HomePage> {
         toolbarHeight: 80,
         title: Row(
           children: [
-            CircleAvatar(
-              radius: 25,
-              child: Icon(
-                isInEditMode
-                    ? Icons.add_photo_alternate_rounded
-                    : Icons.person_rounded,
+            GestureDetector(
+              onTap: () {
+                if (isInEditMode) {
+                  _pickAndSaveImage();
+                } else if (_profileImage != null) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black54,
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                onPressed: () => Navigator.pop(context),
+                                icon: Icon(Icons.close_rounded, color: Pallete.primaryOnDark,),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: Image(
+                            image: FileImage(_profileImage!),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+              child: CircleAvatar(
+                radius: 25,
+                backgroundImage:
+                    _profileImage != null ? FileImage(_profileImage!) : null,
+                child: _profileImage == null
+                    ? Icon(
+                        isInEditMode
+                            ? Icons.add_photo_alternate_rounded
+                            : Icons.person_rounded,
+                      )
+                    : SizedBox.shrink(),
               ),
             ),
             Expanded(
@@ -219,9 +271,9 @@ class _HomePageState extends State<HomePage> {
                                           ],
                                         ),
                                       ),
-                                      Text(
-                                        finalHopeVal > finalFearVal ? 'You gain 1 hope' : 'The GM may add a fear token to the pool'
-                                      ),
+                                      Text(finalHopeVal > finalFearVal
+                                          ? 'You gain 1 hope'
+                                          : 'The GM may add a fear token to the pool.'),
                                     ],
                                     SizedBox(height: 20),
                                     Row(
@@ -304,8 +356,8 @@ class _HomePageState extends State<HomePage> {
         final String hopeOrFear = finalHopeVal > finalFearVal ? 'HOPE' : 'FEAR';
 
         if (finalHopeVal == finalFearVal) {
-          rollHistory
-              .add('CRITICAL SUCCESS: $finalHopeVal(hope) + $finalFearVal(fear).');
+          rollHistory.add(
+              'CRITICAL SUCCESS: $finalHopeVal(hope) + $finalFearVal(fear).');
         } else {
           rollHistory.add(
             modifier > 0
@@ -331,5 +383,32 @@ class _HomePageState extends State<HomePage> {
         });
       }
     });
+  }
+
+  Future<void> _loadProfileImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final path = prefs.getString('profile_image');
+    if (path != null && File(path).existsSync()) {
+      setState(() {
+        _profileImage = File(path);
+      });
+    }
+  }
+
+  Future<void> _pickAndSaveImage() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      final directory = await getApplicationDocumentsDirectory();
+      final savedImage =
+          await File(picked.path).copy('${directory.path}/profile.png');
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('profile_image', savedImage.path);
+
+      setState(() {
+        _profileImage = savedImage;
+      });
+    }
   }
 }

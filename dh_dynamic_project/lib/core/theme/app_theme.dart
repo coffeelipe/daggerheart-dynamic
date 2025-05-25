@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_application/core/theme/app_pallete.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:daggerheart_dynamic/core/theme/app_pallete.dart';
 
 enum MyThemePreference { system, light, dark }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application/core/theme/app_pallete.dart';
-import 'package:flutter_application/providers/dice_color_provider.dart';
+import 'package:daggerheart_dynamic/core/theme/app_pallete.dart';
+import 'package:daggerheart_dynamic/providers/dice_color_provider.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -88,10 +88,13 @@ class _DTwelveState extends State<DTwelve> {
             onPressed: () {
               Navigator.pop(context);
             },
+            style: FilledButton.styleFrom(
+              backgroundColor: Pallete.mainColor,
+              foregroundColor: Pallete.primaryOnDark,
+            ),
             child: const Text(
               'Cancel',
               style: TextStyle(
-                color: Colors.black,
               ),
             ),
           ),
@@ -105,11 +108,13 @@ class _DTwelveState extends State<DTwelve> {
                 setDieValColor(widget.isHopeDie, diceColorProvider);
               });
             },
+            style: FilledButton.styleFrom(
+              backgroundColor: Pallete.mainColor,
+              foregroundColor: Pallete.primaryOnDark,
+            ),
             child: const Text(
               'Got it!',
-              style: TextStyle(
-                color: Colors.black,
-              ),
+              style: TextStyle(),
             ),
           ),
         ],
