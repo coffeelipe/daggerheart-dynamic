@@ -1,2 +1,0 @@
-/home/coffeelipe/Projects/personal/flutter/dh_dynamic/daggerheart-dynamic/dh_dynamic_project/android/app/.cxx/Debug/2s4i663l/armeabi-v7a/CMakeFiles/edit_cache.dir
-/home/coffeelipe/Projects/personal/flutter/dh_dynamic/daggerheart-dynamic/dh_dynamic_project/android/app/.cxx/Debug/2s4i663l/armeabi-v7a/CMakeFiles/rebuild_cache.dir

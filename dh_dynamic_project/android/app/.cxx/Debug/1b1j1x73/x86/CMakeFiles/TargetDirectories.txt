@@ -1,2 +1,0 @@
-/home/coffeelipe/Projects/cria/auth_default/flutter_application/android/app/.cxx/Debug/1b1j1x73/x86/CMakeFiles/edit_cache.dir
-/home/coffeelipe/Projects/cria/auth_default/flutter_application/android/app/.cxx/Debug/1b1j1x73/x86/CMakeFiles/rebuild_cache.dir
