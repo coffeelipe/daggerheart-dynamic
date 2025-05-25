@@ -6,17 +6,17 @@ import 'package:provider/provider.dart';
 
 class StatsBar extends StatefulWidget {
   final bool isInEditMode;
-  
+
   const StatsBar({
     super.key,
     required this.isInEditMode,
   });
 
   @override
-  State<StatsBar> createState() => _StatsBarState();
+  State<StatsBar> createState() => StatsBarState();
 }
 
-class _StatsBarState extends State<StatsBar> {
+class StatsBarState extends State<StatsBar> {
   final List<Map<String, dynamic>> stats = [
     {'name': 'Agility', 'mod': 0},
     {'name': 'Strength', 'mod': 0},
@@ -26,24 +26,39 @@ class _StatsBarState extends State<StatsBar> {
     {'name': 'Knowledge', 'mod': 0},
   ];
 
+  List<Map<String, dynamic>> getCurrentStats() {
+    return List<Map<String, dynamic>>.from(stats);
+  }
+
+  void setStatsFromList(List<dynamic> loadedStats) {
+    print('Updating stats from saved data: $loadedStats');
+    setState(() {
+      for (var i = 0; i < loadedStats.length && i < stats.length; i++) {
+        stats[i]['mod'] = loadedStats[i]['mod'] ?? 0;
+      }
+    }); // refresh UI
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: stats.map(
-        (stat) {
-          return StatField(
-            themeProvider: themeProvider,
-            isInEditMode: widget.isInEditMode,
-            label: stat['name'],
-            statValue: stat['mod'],
-            increment: () => setState(() {stat['mod']++;}),
-            decrement: () => setState(() {stat['mod']--;}),
-          );
-        }
-      ).toList(),
+      children: stats.map((stat) {
+        return StatField(
+          themeProvider: themeProvider,
+          isInEditMode: widget.isInEditMode,
+          label: stat['name'],
+          statValue: stat['mod'],
+          increment: () => setState(() {
+            stat['mod']++;
+          }),
+          decrement: () => setState(() {
+            stat['mod']--;
+          }),
+        );
+      }).toList(),
     );
   }
 }
@@ -70,7 +85,8 @@ class StatField extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Provider.of<StatTapProvider>(context, listen: false).tapStat(label, statValue);
+        Provider.of<StatTapProvider>(context, listen: false)
+            .tapStat(label, statValue);
       },
       child: Column(
         children: [
