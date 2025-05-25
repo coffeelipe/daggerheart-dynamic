@@ -18,12 +18,12 @@ class StatsBar extends StatefulWidget {
 
 class StatsBarState extends State<StatsBar> {
   final List<Map<String, dynamic>> stats = [
-    {'name': 'Agility', 'mod': 0},
-    {'name': 'Strength', 'mod': 0},
+    {'name': 'Agilidade', 'mod': 0},
+    {'name': 'Força', 'mod': 0},
     {'name': 'Finesse', 'mod': 0},
-    {'name': 'Instinct', 'mod': 0},
-    {'name': 'Presence', 'mod': 0},
-    {'name': 'Knowledge', 'mod': 0},
+    {'name': 'Instinto', 'mod': 0},
+    {'name': 'Presença', 'mod': 0},
+    {'name': 'Conhecimento', 'mod': 0},
   ];
 
   List<Map<String, dynamic>> getCurrentStats() {
@@ -31,7 +31,6 @@ class StatsBarState extends State<StatsBar> {
   }
 
   void setStatsFromList(List<dynamic> loadedStats) {
-    print('Updating stats from saved data: $loadedStats');
     setState(() {
       for (var i = 0; i < loadedStats.length && i < stats.length; i++) {
         stats[i]['mod'] = loadedStats[i]['mod'] ?? 0;

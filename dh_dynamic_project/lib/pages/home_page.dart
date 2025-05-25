@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   bool _isLoading = true;
   double _loadingProgress = 0.0;
-  String _loadingMessage = 'Loading...';
+  String _loadingMessage = 'Carregando...';
 
   bool isInEditMode = false;
   bool areLabelsHidden = false;
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
   int finalFearVal = 12;
 
   int resultValue = 0;
-  String characterName = 'Kaeros de Skaldrith';
+  String characterName = '';
   List<String> rollHistory = [];
 
   @override
@@ -74,9 +74,14 @@ class _HomePageState extends State<HomePage> {
     return _isLoading
         ? Scaffold(
             body: Center(
-              child: LinearProgressIndicator(
-                value: _loadingProgress,
-                color: Pallete.mainColor,
+              child: Column(
+                children: [
+                  LinearProgressIndicator(
+                    value: _loadingProgress,
+                    color: Pallete.mainColor,
+                  ),
+                  Text(_loadingMessage),
+                ],
               ),
             ),
           )
@@ -147,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding: EdgeInsets.all(10),
-                        hintText: 'New character',
+                        hintText: 'Novo personagem',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: isInEditMode
@@ -208,7 +213,7 @@ class _HomePageState extends State<HomePage> {
               },
               backgroundColor: Pallete.mainColor,
               mini: true,
-              tooltip: 'Edit sheet',
+              tooltip: 'Editar ficha',
               shape: CircleBorder(),
               child: Icon(
                 isInEditMode ? Icons.check_rounded : Icons.edit_rounded,
@@ -237,8 +242,8 @@ class _HomePageState extends State<HomePage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _buildLabeledDie(hopeDieVal, 'Hope', true),
-                            _buildLabeledDie(fearDieVal, 'Fear', false),
+                            _buildLabeledDie(hopeDieVal, 'Esperança', true),
+                            _buildLabeledDie(fearDieVal, 'Medo', false),
                           ],
                         ),
                         Padding(
@@ -256,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                               minimumSize: Size(300, 50),
                             ),
                             child: Text(
-                              'Roll!',
+                              'Rolar!',
                               style: TextStyle(fontSize: 20),
                             ),
                           ),
@@ -274,15 +279,15 @@ class _HomePageState extends State<HomePage> {
                                             MainAxisAlignment.center,
                                         children: [
                                           if (finalHopeVal == finalFearVal) ...[
-                                            Text('CRITICAL SUCCESS!'),
+                                            Text('SUCESSO CRÍTICO!'),
                                             Text(
-                                              'You clean 1 stress point and gain 1 hope.',
+                                              'Você limpa 1 stress e ganha 1 esperança.',
                                             ),
                                           ] else ...[
                                             Text(resultValue.toString()),
                                             RichText(
                                               text: TextSpan(
-                                                text: 'You rolled with ',
+                                                text: 'Você rolou com ',
                                                 style: TextStyle(
                                                   color: themeProvider
                                                           .isDarkModeOn
@@ -293,8 +298,8 @@ class _HomePageState extends State<HomePage> {
                                                   TextSpan(
                                                     text: finalHopeVal >
                                                             finalFearVal
-                                                        ? 'HOPE!'
-                                                        : 'FEAR!',
+                                                        ? 'ESPERANÇA!'
+                                                        : 'MEDO!',
                                                     style: TextStyle(
                                                       color: finalHopeVal >
                                                               finalFearVal
@@ -308,15 +313,15 @@ class _HomePageState extends State<HomePage> {
                                               ),
                                             ),
                                             Text(finalHopeVal > finalFearVal
-                                                ? 'You gain 1 hope'
-                                                : 'The GM may add a fear token to the pool.'),
+                                                ? 'Você ganha 1 eperança.'
+                                                : 'O GM adiciona uma ficha à pilha de medos'),
                                           ],
                                           SizedBox(height: 20),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             children: [
-                                              Text('History'),
+                                              Text('Histórico'),
                                               Icon(Icons.history),
                                             ],
                                           ),
@@ -390,16 +395,16 @@ class _HomePageState extends State<HomePage> {
 
         resultValue = finalHopeVal + finalFearVal + modifier;
 
-        final String hopeOrFear = finalHopeVal > finalFearVal ? 'HOPE' : 'FEAR';
+        final String hopeOrFear = finalHopeVal > finalFearVal ? 'ESPERANÇA' : 'MEDO';
 
         if (finalHopeVal == finalFearVal) {
           rollHistory.add(
-              'CRITICAL SUCCESS: $finalHopeVal(hope) + $finalFearVal(fear).');
+              'SUCESSO CRÍTICO: d12(Esperança: $finalHopeVal) + d12(Medo: $finalFearVal).');
         } else {
           rollHistory.add(
             modifier > 0
-                ? '$resultValue with $hopeOrFear: $finalHopeVal(hope) + $finalFearVal(fear) + $modifier($tappedStatName).'
-                : '$resultValue with $hopeOrFear: $finalHopeVal(hope) + $finalFearVal(fear).',
+                ? '$resultValue com $hopeOrFear: d12(Esperança: $finalHopeVal) + d12(Medo: $finalFearVal) + $modifier ($tappedStatName).'
+                : '$resultValue com $hopeOrFear: d12(Esperança: $finalHopeVal) + d12(Medo: $finalFearVal).',
           );
         }
 
@@ -470,7 +475,7 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       _loadingProgress = 0.2;
-      _loadingMessage = 'Loading character name';
+      _loadingMessage = 'Carregando nome do personagem';
     });
 
     final int? hopeColorVal = prefs.getInt('currentHopeColor');
@@ -481,7 +486,7 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       _loadingProgress = 0.4;
-      _loadingMessage = 'Loading dice colors';
+      _loadingMessage = 'Carregando dados personalizados';
     });
 
     if (hopeColorVal != null && fearColorVal != null) {
@@ -491,7 +496,7 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       _loadingProgress = 0.6;
-      _loadingMessage = 'Loading stats';
+      _loadingMessage = 'Carregando estatísticas';
     });
 
     if (savedStatsJson != null) {
@@ -509,7 +514,7 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       _loadingProgress = 1.0;
-      _loadingMessage = 'Done!';
+      _loadingMessage = 'Pronto!';
       _isLoading = false;
     });
   }
