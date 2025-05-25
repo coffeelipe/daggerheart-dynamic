@@ -1,5 +1,5 @@
-name: daggerheart_dynamic
-description: "A new Flutter project."
+name: daggerheart_dynamic_dice
+description: "A dynamic dice roller for daggerheart"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -19,6 +19,9 @@ dependencies:
   flutter_colorpicker: ^1.1.0
   image_picker: ^1.1.2
   path_provider: ^2.1.5
+  audioplayers: ^6.4.0
+  flutter_launcher_icons: ^0.14.3
+  flutter_native_splash: ^2.4.6
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +33,13 @@ flutter:
   
   assets:
     - assets/images/
+    - assets/sfx/
+
+flutter_launcher_icons:
+  android: true
+  image_path: "assets/images/icon.png"
+
+flutter_native_splash:
+  color: "#000000"
+  image: assets/images/icon.png
+  android: true

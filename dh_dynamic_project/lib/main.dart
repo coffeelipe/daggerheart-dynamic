@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:daggerheart_dynamic/core/theme/app_theme.dart';
-import 'package:daggerheart_dynamic/pages/home_page.dart';
-import 'package:daggerheart_dynamic/providers/dice_color_provider.dart';
-import 'package:daggerheart_dynamic/providers/tap_provider.dart';
-import 'package:daggerheart_dynamic/providers/theme_provider.dart';
-import 'package:daggerheart_dynamic/testing_field.dart';
+import 'package:daggerheart_dynamic_dice/core/theme/app_theme.dart';
+import 'package:daggerheart_dynamic_dice/pages/home_page.dart';
+import 'package:daggerheart_dynamic_dice/providers/dice_color_provider.dart';
+import 'package:daggerheart_dynamic_dice/providers/tap_provider.dart';
+import 'package:daggerheart_dynamic_dice/providers/theme_provider.dart';
+import 'package:daggerheart_dynamic_dice/testing_field.dart';
 import 'package:provider/provider.dart';
 
 void main() async {

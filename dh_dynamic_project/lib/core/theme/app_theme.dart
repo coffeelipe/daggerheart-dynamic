@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:daggerheart_dynamic/core/theme/app_pallete.dart';
+import 'package:daggerheart_dynamic_dice/core/theme/app_pallete.dart';
 
 enum MyThemePreference { system, light, dark }
 

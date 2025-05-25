@@ -3,13 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:daggerheart_dynamic/core/theme/app_pallete.dart';
-import 'package:daggerheart_dynamic/providers/dice_color_provider.dart';
-import 'package:daggerheart_dynamic/providers/tap_provider.dart';
-import 'package:daggerheart_dynamic/providers/theme_provider.dart';
-import 'package:daggerheart_dynamic/widgets/d_twelve.dart';
-import 'package:daggerheart_dynamic/widgets/stats_bar.dart';
+import 'package:daggerheart_dynamic_dice/core/theme/app_pallete.dart';
+import 'package:daggerheart_dynamic_dice/providers/dice_color_provider.dart';
+import 'package:daggerheart_dynamic_dice/providers/tap_provider.dart';
+import 'package:daggerheart_dynamic_dice/providers/theme_provider.dart';
+import 'package:daggerheart_dynamic_dice/widgets/d_twelve.dart';
+import 'package:daggerheart_dynamic_dice/widgets/stats_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -26,10 +27,12 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController nameController = TextEditingController();
   final ScrollController historyScrollCOntroller = ScrollController();
   final GlobalKey<StatsBarState> _statsBarKey = GlobalKey<StatsBarState>();
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   bool _isLoading = true;
   double _loadingProgress = 0.0;
   String _loadingMessage = 'Carregando...';
+  bool isFirstTime = true;
 
   bool isInEditMode = false;
   bool areLabelsHidden = false;
@@ -51,11 +54,15 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final diceColorProvider =
           Provider.of<DiceColorProvider>(context, listen: false);
-      _loadPreferences(diceColorProvider);
-      _loadProfileImage();
+      await _loadPreferences(diceColorProvider);
+      await _loadProfileImage();
+
+      if (isFirstTime) {
+        _showTutorials();
+      }
     });
   }
 
@@ -63,6 +70,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     nameController.dispose();
     historyScrollCOntroller.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -279,12 +287,28 @@ class _HomePageState extends State<HomePage> {
                                             MainAxisAlignment.center,
                                         children: [
                                           if (finalHopeVal == finalFearVal) ...[
-                                            Text('SUCESSO CRÍTICO!'),
+                                            Text(
+                                              'SUCESSO CRÍTICO!',
+                                              style: TextStyle(
+                                                color: Colors.amber,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 27,
+                                              ),
+                                            ),
                                             Text(
                                               'Você limpa 1 stress e ganha 1 esperança.',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                              ),
                                             ),
                                           ] else ...[
-                                            Text(resultValue.toString()),
+                                            Text(
+                                              resultValue.toString(),
+                                              style: TextStyle(
+                                                fontSize: 37,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                             RichText(
                                               text: TextSpan(
                                                 text: 'Você rolou com ',
@@ -293,6 +317,7 @@ class _HomePageState extends State<HomePage> {
                                                           .isDarkModeOn
                                                       ? Pallete.primaryOnDark
                                                       : Pallete.primaryOnLight,
+                                                  fontSize: 18,
                                                 ),
                                                 children: [
                                                   TextSpan(
@@ -307,14 +332,22 @@ class _HomePageState extends State<HomePage> {
                                                               .hopeColor
                                                           : diceColorProvider
                                                               .fearColor,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            Text(finalHopeVal > finalFearVal
-                                                ? 'Você ganha 1 eperança.'
-                                                : 'O GM adiciona uma ficha à pilha de medos'),
+                                            Text(
+                                              finalHopeVal > finalFearVal
+                                                  ? 'Você ganha 1 eperança.'
+                                                  : 'O GM adiciona uma ficha à pilha de medos',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                              ),
+                                            ),
                                           ],
                                           SizedBox(height: 20),
                                           Row(
@@ -377,9 +410,11 @@ class _HomePageState extends State<HomePage> {
       hasRolled = true;
     });
 
-    int rollDuration = 300; // total duration in ms
+    int rollDuration = 500; // total duration in ms
     int interval = 50; // time between number changes
     int elapsed = 0;
+
+    _playDiceSound();
 
     Timer.periodic(Duration(milliseconds: interval), (timer) {
       setState(() {
@@ -395,7 +430,8 @@ class _HomePageState extends State<HomePage> {
 
         resultValue = finalHopeVal + finalFearVal + modifier;
 
-        final String hopeOrFear = finalHopeVal > finalFearVal ? 'ESPERANÇA' : 'MEDO';
+        final String hopeOrFear =
+            finalHopeVal > finalFearVal ? 'ESPERANÇA' : 'MEDO';
 
         if (finalHopeVal == finalFearVal) {
           rollHistory.add(
@@ -466,8 +502,6 @@ class _HomePageState extends State<HomePage> {
       await prefs.setInt(
           'currentFearColor', diceColorProvider.fearColor.toARGB32());
     }
-    print(
-        "Stats: ${prefs.getString('savedStats')} | Name: ${prefs.getString('charName')} | Dice Color: ${prefs.getInt('currentHopeColor')} | Dice Color: ${prefs.getInt('currentFearColor')}");
   }
 
   Future<void> _loadPreferences(DiceColorProvider diceColorProvider) async {
@@ -481,7 +515,9 @@ class _HomePageState extends State<HomePage> {
     final int? hopeColorVal = prefs.getInt('currentHopeColor');
     final int? fearColorVal = prefs.getInt('currentFearColor');
     final String? savedStatsJson = prefs.getString('savedStats');
+    final bool? isFirstTimePref = prefs.getBool('isFirstTime');
 
+    isFirstTime = isFirstTimePref ?? true;
     nameController.text = prefs.getString('charName') ?? '';
 
     setState(() {
@@ -507,7 +543,7 @@ class _HomePageState extends State<HomePage> {
         if (statsBarState != null) {
           statsBarState.setStatsFromList(decodedStats);
         } else {
-          print('StatsBar state is null — not ready yet.');
+          throw Exception('Stats are note ready yet!');
         }
       });
     }
@@ -517,5 +553,40 @@ class _HomePageState extends State<HomePage> {
       _loadingMessage = 'Pronto!';
       _isLoading = false;
     });
+  }
+
+  Future<void> _showTutorials() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(Duration(seconds: 2));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: Duration(seconds: 5),
+            content: Text(
+                'Toque em "rolar" para uma rolagem padrão. Toque em um atributo para rolar com modificador!'),
+          ),
+        );
+      }
+      await Future.delayed(Duration(seconds: 5));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: Duration(seconds: 4),
+            content:
+                Text('Toque e segure em um dado para personalizar a cor ;)'),
+          ),
+        );
+      }
+
+      isFirstTime = false;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isFirstTime', isFirstTime);
+    });
+  }
+
+  Future<void> _playDiceSound() async {
+    final soundPath = 'sfx/rolling_dice.mp3';
+    await _audioPlayer.play(AssetSource(soundPath));
   }
 }

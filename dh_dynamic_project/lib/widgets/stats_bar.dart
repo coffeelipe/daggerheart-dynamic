@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:daggerheart_dynamic/core/theme/app_pallete.dart';
-import 'package:daggerheart_dynamic/providers/tap_provider.dart';
-import 'package:daggerheart_dynamic/providers/theme_provider.dart';
+import 'package:daggerheart_dynamic_dice/core/theme/app_pallete.dart';
+import 'package:daggerheart_dynamic_dice/providers/tap_provider.dart';
+import 'package:daggerheart_dynamic_dice/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class StatsBar extends StatefulWidget {

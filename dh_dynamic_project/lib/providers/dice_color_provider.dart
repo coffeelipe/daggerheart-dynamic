@@ -1,6 +1,6 @@
 // dice_color_provider.dart
 import 'package:flutter/material.dart';
-import 'package:daggerheart_dynamic/core/theme/app_pallete.dart';
+import 'package:daggerheart_dynamic_dice/core/theme/app_pallete.dart';
 
 class DiceColorProvider extends ChangeNotifier {
   Color _hopeColor = Pallete.defaultDieColor;

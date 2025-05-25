@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:daggerheart_dynamic/core/theme/app_pallete.dart';
-import 'package:daggerheart_dynamic/providers/dice_color_provider.dart';
+import 'package:daggerheart_dynamic_dice/core/theme/app_pallete.dart';
+import 'package:daggerheart_dynamic_dice/providers/dice_color_provider.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
